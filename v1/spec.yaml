@@ -1,0 +1,142 @@
+openapi: "3.0.2"
+info:
+  version: 1.0.0
+  title: Swagger Petstore
+  description: A sample API that uses a petstore as an example to demonstrate features in the OpenAPI 3.0 specification
+  termsOfService: http://swagger.io/terms/
+  contact:
+    name: Swagger API Team
+    email: apiteam@swagger.io
+    url: http://swagger.io
+  license:
+    name: Apache 2.0
+    url: https://www.apache.org/licenses/LICENSE-2.0.html
+tags:
+  - name: info
+    description: General information about the API which is not domain specific
+  - name: user
+    description: User operations
+paths:
+  /:
+    get:
+      description: |
+        Check endpoint to ensure the application is online and healthy.
+
+        This is mainly used by load-balancers, but also by clients to check if the application is up and running
+      operationId: getApiPing
+      tags:
+        - info
+      responses:
+        '200':
+          description: Ok, if everything works fine
+        '500':
+          description: Internal server error, if the underlying application has problems
+    head:
+      description: |
+        Check endpoint to ensure the application is online and healthy.
+
+        This is mainly used by load-balancers, but also by clients to check if the application is up and running
+      operationId: headApiPing
+      tags:
+        - info
+      responses:
+        '200':
+          description: Ok, if everything works fine
+        '500':
+          description: Internal server error, if the underlying application has problems
+  /info:
+    get:
+      description: |
+        Returns info about the API
+        E.g. the version
+      operationId: getApiInfo
+      tags:
+        - info
+      responses:
+        '200':
+          description: API Information
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiInfo'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/ApiInfo'
+  /user:
+    get:
+      description: Get all users
+      operationId: getUserList
+      tags:
+        - user
+      responses:
+        '200':
+          description: Returns a user list
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/User'
+            application/xml:
+              schema:
+                type: array
+                xml:
+                  wrapped : true
+                  name: users
+                items:
+                  $ref: '#/components/schemas/User'
+components:
+  schemas:
+    ApiInfo:
+      required:
+        - version
+        - openedupVersion
+      xml:
+        prefix: 'openedup'
+        namespace: 'http://openedup.org/schema/v1'
+      properties:
+        version:
+          type: string
+          xml:
+            attribute: true
+          description: Version of the API
+        openedupVersion:
+          type: string
+          xml:
+            attribute: true
+          format: semver
+          description: The version fo the openEduPlatform standard used
+        organization:
+          type: string
+          description: Name or identifier of the providing organization
+        sytsemName:
+          type: string
+          description: Returns the name of the system or API
+        environment:
+          type: string
+          description: Indicates whether this is a test, stage, or production environment
+        description:
+          type: string
+          description: Prose text describing the current API
+    User:
+      required:
+        - uuid
+        - active
+      xml:
+        prefix: 'openedup'
+        namespace: 'http://openedup.org/schema/v1'
+      properties:
+        uuid:
+          type: string
+          format: uuid
+        email:
+          type: string
+          format: email
+        active:
+          type: boolean
+        firstName:
+          type: string
+        lastName:
+          type: string
+
+
