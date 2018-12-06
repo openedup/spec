@@ -109,7 +109,7 @@ components:
         organization:
           type: string
           description: Name or identifier of the providing organization
-        sytsemName:
+        systemName:
           type: string
           description: Returns the name of the system or API
         environment:
@@ -123,7 +123,6 @@ components:
         - uuid
         - active
       xml:
-        prefix: 'openedup'
         namespace: 'http://openedup.org/schema/v1'
       properties:
         uuid:
