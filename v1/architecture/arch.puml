@@ -1,0 +1,80 @@
+@startuml
+
+class User {
+  + id: UUID
+  + email: String
+  + passwordHash: String
+  + firstName: Optional<String>
+  + lastName: Optional<String>
+}
+
+class Institution {
+  + uuid: UUID
+  + name: String
+}
+
+class Group {
+  + id UUID
+  + groupType GroupType
+  + name String
+}
+
+enum GroupType {
+  SchoolClass,
+  LearningGroup,
+  Custom
+}
+
+class Course {
+  + id: UUID
+  + name: String
+  + description: Optional<String>
+}
+
+class Lesson {
+  + id: UUID
+  + date: Optional<Date>
+}
+
+interface LessonContent {
+  + id: UUID
+}
+
+class Link {
+
+}
+
+class Video {
+
+}
+
+class Document {
+
+}
+
+class Quizz {
+
+}
+
+User "*" -- "*" Institution
+User "*" -- "*" Group
+User "*" -- "*" Course
+
+Group "*" -- "*" Course
+GroupType "*" --o "1" Group
+
+Institution "1" -- "*" Course
+
+Course "1" -- "*" Lesson
+
+Lesson o-- Link
+Lesson o-- Video
+Lesson o-- Document
+Lesson o-- Quizz
+
+Link <|-- LessonContent
+Video <|-- LessonContent
+Document <|-- LessonContent
+Quizz <|-- LessonContent
+
+@enduml
