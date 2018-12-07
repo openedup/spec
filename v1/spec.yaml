@@ -18,7 +18,9 @@ tags:
   - name: security
     description: Security operations like authentication / authorization
   - name: user
-    description: User operations (optional)
+    description: User operations
+  - name: institution
+    description: Institution operations
   - name: L1
     description: Specification level 1 (minimum implementation)
   - name: L2
@@ -44,7 +46,6 @@ paths:
       summary: Check endpoint to ensure the application is online and healthy
       description: >
         This is mainly used by load-balancers, but also by clients to check if the application is up and running
-      operationId: headApiPing
       tags:
         - info
         - L3
@@ -53,7 +54,6 @@ paths:
           description: Ok, if everything works fine
         '500':
           description: Internal server error, if the underlying application has problems
-
   /info:
     get:
       summary: Returns info about the API
@@ -105,7 +105,6 @@ paths:
           description: Either username or password was wrong, user is inactive, or blocked
         '400':
           description: Malformed request or parameter missing
-
   /security/auth/renew:
     post:
       summary: Renow a soon expiring auth token
@@ -139,7 +138,7 @@ paths:
         - bearerAuth: []
       responses:
         '200':
-          description: Returns a user list
+          description: OK
           content:
             application/json:
               schema:
@@ -160,7 +159,7 @@ paths:
               $ref: '#/components/schemas/UserCreate'
       responses:
         '201':
-          description: User successfully created
+          description: Successfully created
         '401':
           description: Unauthorized
         '400':
@@ -171,7 +170,7 @@ paths:
     parameters:
       - name: uuid
         in: path
-        description: User ID
+        description: Unique ID
         required: true
         schema:
           type: string
@@ -188,7 +187,7 @@ paths:
         - bearerAuth: []
       responses:
         '200':
-          description: Returns the user
+          description: Ok
           content:
             application/json:
               schema:
@@ -199,7 +198,6 @@ paths:
           description: Resource not found
     put:
       summary: Change a specific user by its UUID
-      operationId: putUser
       tags:
         - user
         - L2
@@ -212,7 +210,7 @@ paths:
               $ref: '#/components/schemas/UserCreate'
       responses:
         '201':
-          description: User successfully updated
+          description: Successfully updated
         '401':
           description: Unauthorized
         '400':
@@ -223,18 +221,127 @@ paths:
       summary: Delete a specific user by its UUID
       tags:
         - user
-        - L2
+        - L3
       security:
         - bearerAuth: []
       responses:
         '200':
-          description: User successfully deleted
+          description: Successfully deleted
         '401':
           description: Unauthorized
         '400':
           description: Malformed request or parameter missing
         '404':
           description: Resource not found
+
+  /institution:
+    get:
+      summary: Get all institutions
+      description: |
+        Only institutions known to authenticated users are returned
+      tags:
+        - institution
+        - L1
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Institution'
+    post:
+      summary: Create a new institution
+      tags:
+        - institution
+        - L2
+      security:
+        - bearerAuth: []
+      requestBody:
+        content:
+          'application/json':
+            schema:
+              $ref: '#/components/schemas/Institution'
+      responses:
+        '201':
+          description: Successfully created
+        '401':
+          description: Unauthorized
+        '400':
+          description: Malformed request or parameter missing
+        '404':
+          description: Resource not found
+  /institution/{uuid}:
+    parameters:
+      - name: uuid
+        in: path
+        description: Unique ID
+        required: true
+        schema:
+          type: string
+          format: uuid
+
+    get:
+      summary: Get a specific institution by its UUID
+      description: |
+        Only institutions known to authenticated users are returned
+      tags:
+        - institution
+        - L1
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Institution'
+        '401':
+          description: Unauthorized
+        '404':
+          description: Resource not found
+    put:
+      summary: Change a specific institution by its UUID
+      tags:
+        - institution
+        - L2
+      security:
+        - bearerAuth: []
+      requestBody:
+        content:
+          'application/json':
+            schema:
+              $ref: '#/components/schemas/Institution'
+      responses:
+        '201':
+          description: Successfully updated
+        '401':
+          description: Unauthorized
+        '400':
+          description: Malformed request or parameter missing
+        '404':
+          description: Resource not found
+    delete:
+      summary: Delete a specific institution by its UUID
+      tags:
+        - user
+        - L3
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Successfully deleted
+        '401':
+          description: Unauthorized
+        '400':
+          description: Malformed request or parameter missing
+        '404':
+          description: Resource not found
+
 components:
   securitySchemes:
     bearerAuth:
@@ -316,6 +423,17 @@ components:
           type: string
         lastName:
           type: string
+    Institution:
+      required:
+        - uuid
+        - name
+      properties:
+        uuid:
+          type: string
+          format: uuid
+        name:
+          type: string
+
   examples:
     AuthSuccess:
       value:
