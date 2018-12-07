@@ -1,22 +1,27 @@
 openapi: "3.0.2"
+
 info:
   version: 1.0.0
-  title: Swagger Petstore
-  description: A sample API that uses a petstore as an example to demonstrate features in the OpenAPI 3.0 specification
-  termsOfService: http://swagger.io/terms/
+  title: Open Education Platform - V1
+  description: An open standard to store and communicate education-related data
   contact:
-    name: Swagger API Team
-    email: apiteam@swagger.io
-    url: http://swagger.io
+    name: Open Education Platform Team
+    email: info@openedup.org
+    url: https://openedup.org
   license:
-    name: Apache 2.0
-    url: https://www.apache.org/licenses/LICENSE-2.0.html
+    name: MIT
+    url: https://opensource.org/licenses/MIT
+
 tags:
   - name: info
     description: General information about the API which is not domain specific
+  - name: security
+    description: Security operations like authentication / authorization
   - name: user
     description: User operations
+
 paths:
+
   /:
     get:
       description: |
@@ -44,6 +49,7 @@ paths:
           description: Ok, if everything works fine
         '500':
           description: Internal server error, if the underlying application has problems
+
   /info:
     get:
       description: |
@@ -59,15 +65,55 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ApiInfo'
-            application/xml:
+
+  /security/auth/pw:
+    post:
+      description: Issues a new auth token, if sucessfully authorized
+      operationId: postAuthPw
+      tags:
+        - security
+      requestBody:
+        content:
+          'application/x-www-form-urlencoded':
+            schema:
+              properties:
+                username:
+                  description: Email of the user to login
+                  type: string
+                  format: email
+                password:
+                  description: Password to log in
+                  type: string
+                  format: password
+              required:
+                - username
+                - password
+      responses:
+        '200':
+          description: Successfully authenticated
+          content:
+            application/json:
               schema:
-                $ref: '#/components/schemas/ApiInfo'
+                $ref: '#/components/schemas/AuthSuccess'
+              examples:
+                auth-success:
+                  $ref: '#/components/examples/AuthSuccess'
+        '401':
+          description: Either username or password was wrong, user is inactive, or blocked
+        '400':
+          description: Malformed request or parameter missing
+
   /user:
     get:
-      description: Get all users
+      description: |
+        Get all users
+
+        Only users known to authenticated users are returned
       operationId: getUserList
       tags:
         - user
+      security:
+        - bearerAuth: []
       responses:
         '200':
           description: Returns a user list
@@ -77,33 +123,23 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/User'
-            application/xml:
-              schema:
-                type: array
-                xml:
-                  wrapped : true
-                  name: users
-                items:
-                  $ref: '#/components/schemas/User'
 components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
   schemas:
     ApiInfo:
       required:
         - version
         - openedupVersion
-      xml:
-        prefix: 'openedup'
-        namespace: 'http://openedup.org/schema/v1'
       properties:
         version:
           type: string
-          xml:
-            attribute: true
           description: Version of the API
         openedupVersion:
           type: string
-          xml:
-            attribute: true
           format: semver
           description: The version fo the openEduPlatform standard used
         organization:
@@ -118,12 +154,23 @@ components:
         description:
           type: string
           description: Prose text describing the current API
+    AuthSuccess:
+      required:
+        - userUuid
+        - token
+      properties:
+        userUuid:
+          type: string
+          format: uuid
+        token:
+          type: string
+        tokenExpiration:
+          type: string
+          format: date-time
     User:
       required:
         - uuid
         - active
-      xml:
-        namespace: 'http://openedup.org/schema/v1'
       properties:
         uuid:
           type: string
@@ -137,5 +184,11 @@ components:
           type: string
         lastName:
           type: string
+  examples:
+    AuthSuccess:
+      value:
+        userUuid: "4dd29b64-83a3-4508-84cd-616215f4cf8d"
+        token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c"
+        tokenExpiration: "2019-12-07T09:47:34.274Z"
 
 
