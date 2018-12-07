@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<ApiInfo xmlns="http://openedup.org/schema/v1" version="string" openedupVersion="string">
-    <organization>string</organization>
-    <systemName>string</systemName>
-    <environment>string</environment>
-    <description>string</description>
-</ApiInfo>
