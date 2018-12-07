@@ -9,8 +9,20 @@ An open standard to store and communicate education-related data
   - [`HEAD` /](#op-head) 
   - [`GET` /info](#op-get-info) 
   - [`POST` /security/auth/pw](#op-post-security-auth-pw) 
+  - [`POST` /security/auth/renew](#op-post-security-auth-renew) 
   - [`GET` /user](#op-get-user) 
+  - [`POST` /user](#op-post-user) 
+  - [`GET` /user/{uuid}](#op-get-user-uuid) 
+  - [`PUT` /user/{uuid}](#op-put-user-uuid) 
+  - [`DELETE` /user/{uuid}](#op-delete-user-uuid) 
+  - [`GET` /institution](#op-get-institution) 
+  - [`POST` /institution](#op-post-institution) 
+  - [`GET` /institution/{uuid}](#op-get-institution-uuid) 
+  - [`PUT` /institution/{uuid}](#op-put-institution-uuid) 
+  - [`DELETE` /institution/{uuid}](#op-delete-institution-uuid) 
 * [Schemas](#schemas)
+  - 
+  - 
   - 
   - 
   - 
@@ -50,7 +62,7 @@ An open standard to store and communicate education-related data
 ### `GET` /
 <a id="op-get" />
 
-Check endpoint to ensure the application is online and healthy.
+> Check endpoint to ensure the application is online and healthy
 
 This is mainly used by load-balancers, but also by clients to check if the application is up and running
 
@@ -78,6 +90,7 @@ _No headers specified_
 #### Tags
 
 <div class="tags">
+  <div class="tags__tag"></div>
   <div class="tags__tag"></div>
 </div>
 </div>
@@ -85,7 +98,7 @@ _No headers specified_
 ### `HEAD` /
 <a id="op-head" />
 
-Check endpoint to ensure the application is online and healthy.
+> Check endpoint to ensure the application is online and healthy
 
 This is mainly used by load-balancers, but also by clients to check if the application is up and running
 
@@ -114,14 +127,14 @@ _No headers specified_
 
 <div class="tags">
   <div class="tags__tag"></div>
+  <div class="tags__tag"></div>
 </div>
 </div>
 
 ### `GET` /info
 <a id="op-get-info" />
 
-Returns info about the API
-E.g. the version
+> Returns info about the API
 
 
 
@@ -215,7 +228,10 @@ _No headers specified_
 ### `POST` /security/auth/pw
 <a id="op-post-security-auth-pw" />
 
-Issues a new auth token, if sucessfully authorized
+> Issues a new auth token
+
+Issues a new authentication token, if successfully authorized
+
 
 
 
@@ -333,13 +349,95 @@ _No headers specified_
 
 <div class="tags">
   <div class="tags__tag"></div>
+  <div class="tags__tag"></div>
+</div>
+</div>
+
+### `POST` /security/auth/renew
+<a id="op-post-security-auth-renew" />
+
+> Renow a soon expiring auth token
+
+
+
+
+
+
+
+
+#### Responses
+
+
+##### ▶ 200 - Successfully authenticated
+
+###### Headers
+_No headers specified_
+
+###### application/json
+
+
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Description</th>
+      <th>Accepted values</th>
+    </tr>
+  </thead>
+  <tbody>
+      <tr>
+        <td>userUuid <strong>(required)</strong></td>
+        <td>
+          string
+        </td>
+        <td></td>
+        <td><em>Any</em></td>
+      </tr>
+      <tr>
+        <td>token <strong>(required)</strong></td>
+        <td>
+          string
+        </td>
+        <td></td>
+        <td><em>Any</em></td>
+      </tr>
+      <tr>
+        <td>tokenExpiration</td>
+        <td>
+          string
+        </td>
+        <td></td>
+        <td><em>Any</em></td>
+      </tr>
+  </tbody>
+</table>
+
+
+##### ▶ 400 - Malformed request or parameter missing
+
+###### Headers
+_No headers specified_
+
+##### ▶ 401 - Either username or password was wrong, user is inactive, or blocked
+
+###### Headers
+_No headers specified_
+
+
+#### Tags
+
+<div class="tags">
+  <div class="tags__tag"></div>
+  <div class="tags__tag"></div>
 </div>
 </div>
 
 ### `GET` /user
 <a id="op-get-user" />
 
-Get all users
+> Get all users
 
 Only users known to authenticated users are returned
 
@@ -353,7 +451,7 @@ Only users known to authenticated users are returned
 #### Responses
 
 
-##### ▶ 200 - Returns a user list
+##### ▶ 200 - OK
 
 ###### Headers
 _No headers specified_
@@ -428,6 +526,770 @@ _No headers specified_
 #### Tags
 
 <div class="tags">
+  <div class="tags__tag"></div>
+  <div class="tags__tag"></div>
+</div>
+</div>
+
+### `POST` /user
+<a id="op-post-user" />
+
+> Create a new user
+
+
+
+
+
+
+#### Request body
+###### application/json
+
+
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Description</th>
+      <th>Accepted values</th>
+    </tr>
+  </thead>
+  <tbody>
+      <tr>
+        <td>uuid <strong>(required)</strong></td>
+        <td>
+          string
+        </td>
+        <td></td>
+        <td><em>Any</em></td>
+      </tr>
+      <tr>
+        <td>email</td>
+        <td>
+          string
+        </td>
+        <td></td>
+        <td><em>Any</em></td>
+      </tr>
+      <tr>
+        <td>password</td>
+        <td>
+          string
+        </td>
+        <td></td>
+        <td><em>Any</em></td>
+      </tr>
+      <tr>
+        <td>active <strong>(required)</strong></td>
+        <td>
+          boolean
+        </td>
+        <td></td>
+        <td><em>Any</em></td>
+      </tr>
+      <tr>
+        <td>firstName</td>
+        <td>
+          string
+        </td>
+        <td></td>
+        <td><em>Any</em></td>
+      </tr>
+      <tr>
+        <td>lastName</td>
+        <td>
+          string
+        </td>
+        <td></td>
+        <td><em>Any</em></td>
+      </tr>
+  </tbody>
+</table>
+
+
+##### Example _(generated)_
+
+```json
+{
+  "uuid": "string",
+  "email": "user@example.com",
+  "password": "pa$$word",
+  "active": true,
+  "firstName": "string",
+  "lastName": "string"
+}
+```
+
+
+
+
+#### Responses
+
+
+##### ▶ 201 - Successfully created
+
+###### Headers
+_No headers specified_
+
+##### ▶ 400 - Malformed request or parameter missing
+
+###### Headers
+_No headers specified_
+
+##### ▶ 401 - Unauthorized
+
+###### Headers
+_No headers specified_
+
+##### ▶ 404 - Resource not found
+
+###### Headers
+_No headers specified_
+
+
+#### Tags
+
+<div class="tags">
+  <div class="tags__tag"></div>
+  <div class="tags__tag"></div>
+</div>
+</div>
+
+### `GET` /user/{uuid}
+<a id="op-get-user-uuid" />
+
+> Get a specific user by its UUID
+
+Only users known to authenticated users are returned
+
+
+
+
+
+
+
+
+#### Responses
+
+
+##### ▶ 200 - Ok
+
+###### Headers
+_No headers specified_
+
+###### application/json
+
+
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Description</th>
+      <th>Accepted values</th>
+    </tr>
+  </thead>
+  <tbody>
+      <tr>
+        <td>uuid <strong>(required)</strong></td>
+        <td>
+          string
+        </td>
+        <td></td>
+        <td><em>Any</em></td>
+      </tr>
+      <tr>
+        <td>email</td>
+        <td>
+          string
+        </td>
+        <td></td>
+        <td><em>Any</em></td>
+      </tr>
+      <tr>
+        <td>active <strong>(required)</strong></td>
+        <td>
+          boolean
+        </td>
+        <td></td>
+        <td><em>Any</em></td>
+      </tr>
+      <tr>
+        <td>firstName</td>
+        <td>
+          string
+        </td>
+        <td></td>
+        <td><em>Any</em></td>
+      </tr>
+      <tr>
+        <td>lastName</td>
+        <td>
+          string
+        </td>
+        <td></td>
+        <td><em>Any</em></td>
+      </tr>
+  </tbody>
+</table>
+
+
+##### ▶ 401 - Unauthorized
+
+###### Headers
+_No headers specified_
+
+##### ▶ 404 - Resource not found
+
+###### Headers
+_No headers specified_
+
+
+#### Tags
+
+<div class="tags">
+  <div class="tags__tag"></div>
+  <div class="tags__tag"></div>
+</div>
+</div>
+
+### `PUT` /user/{uuid}
+<a id="op-put-user-uuid" />
+
+> Change a specific user by its UUID
+
+
+
+
+
+
+#### Request body
+###### application/json
+
+
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Description</th>
+      <th>Accepted values</th>
+    </tr>
+  </thead>
+  <tbody>
+      <tr>
+        <td>uuid <strong>(required)</strong></td>
+        <td>
+          string
+        </td>
+        <td></td>
+        <td><em>Any</em></td>
+      </tr>
+      <tr>
+        <td>email</td>
+        <td>
+          string
+        </td>
+        <td></td>
+        <td><em>Any</em></td>
+      </tr>
+      <tr>
+        <td>password</td>
+        <td>
+          string
+        </td>
+        <td></td>
+        <td><em>Any</em></td>
+      </tr>
+      <tr>
+        <td>active <strong>(required)</strong></td>
+        <td>
+          boolean
+        </td>
+        <td></td>
+        <td><em>Any</em></td>
+      </tr>
+      <tr>
+        <td>firstName</td>
+        <td>
+          string
+        </td>
+        <td></td>
+        <td><em>Any</em></td>
+      </tr>
+      <tr>
+        <td>lastName</td>
+        <td>
+          string
+        </td>
+        <td></td>
+        <td><em>Any</em></td>
+      </tr>
+  </tbody>
+</table>
+
+
+##### Example _(generated)_
+
+```json
+{
+  "uuid": "string",
+  "email": "user@example.com",
+  "password": "pa$$word",
+  "active": true,
+  "firstName": "string",
+  "lastName": "string"
+}
+```
+
+
+
+
+#### Responses
+
+
+##### ▶ 201 - Successfully updated
+
+###### Headers
+_No headers specified_
+
+##### ▶ 400 - Malformed request or parameter missing
+
+###### Headers
+_No headers specified_
+
+##### ▶ 401 - Unauthorized
+
+###### Headers
+_No headers specified_
+
+##### ▶ 404 - Resource not found
+
+###### Headers
+_No headers specified_
+
+
+#### Tags
+
+<div class="tags">
+  <div class="tags__tag"></div>
+  <div class="tags__tag"></div>
+</div>
+</div>
+
+### `DELETE` /user/{uuid}
+<a id="op-delete-user-uuid" />
+
+> Delete a specific user by its UUID
+
+
+
+
+
+
+
+
+#### Responses
+
+
+##### ▶ 200 - Successfully deleted
+
+###### Headers
+_No headers specified_
+
+##### ▶ 400 - Malformed request or parameter missing
+
+###### Headers
+_No headers specified_
+
+##### ▶ 401 - Unauthorized
+
+###### Headers
+_No headers specified_
+
+##### ▶ 404 - Resource not found
+
+###### Headers
+_No headers specified_
+
+
+#### Tags
+
+<div class="tags">
+  <div class="tags__tag"></div>
+  <div class="tags__tag"></div>
+</div>
+</div>
+
+### `GET` /institution
+<a id="op-get-institution" />
+
+> Get all institutions
+
+Only institutions known to authenticated users are returned
+
+
+
+
+
+
+
+
+#### Responses
+
+
+##### ▶ 200 - OK
+
+###### Headers
+_No headers specified_
+
+###### application/json
+
+
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Description</th>
+      <th>Accepted values</th>
+    </tr>
+  </thead>
+  <tbody>
+      <tr>
+        <td>Response</td>
+        <td>
+          array
+        </td>
+        <td></td>
+        <td><em>Any</em></td>
+      </tr>
+      <tr>
+        <td>Response.uuid <strong>(required)</strong></td>
+        <td>
+          string
+        </td>
+        <td></td>
+        <td><em>Any</em></td>
+      </tr>
+      <tr>
+        <td>Response.name <strong>(required)</strong></td>
+        <td>
+          string
+        </td>
+        <td></td>
+        <td><em>Any</em></td>
+      </tr>
+  </tbody>
+</table>
+
+
+
+#### Tags
+
+<div class="tags">
+  <div class="tags__tag"></div>
+  <div class="tags__tag"></div>
+</div>
+</div>
+
+### `POST` /institution
+<a id="op-post-institution" />
+
+> Create a new institution
+
+
+
+
+
+
+#### Request body
+###### application/json
+
+
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Description</th>
+      <th>Accepted values</th>
+    </tr>
+  </thead>
+  <tbody>
+      <tr>
+        <td>uuid <strong>(required)</strong></td>
+        <td>
+          string
+        </td>
+        <td></td>
+        <td><em>Any</em></td>
+      </tr>
+      <tr>
+        <td>name <strong>(required)</strong></td>
+        <td>
+          string
+        </td>
+        <td></td>
+        <td><em>Any</em></td>
+      </tr>
+  </tbody>
+</table>
+
+
+##### Example _(generated)_
+
+```json
+{
+  "uuid": "string",
+  "name": "string"
+}
+```
+
+
+
+
+#### Responses
+
+
+##### ▶ 201 - Successfully created
+
+###### Headers
+_No headers specified_
+
+##### ▶ 400 - Malformed request or parameter missing
+
+###### Headers
+_No headers specified_
+
+##### ▶ 401 - Unauthorized
+
+###### Headers
+_No headers specified_
+
+##### ▶ 404 - Resource not found
+
+###### Headers
+_No headers specified_
+
+
+#### Tags
+
+<div class="tags">
+  <div class="tags__tag"></div>
+  <div class="tags__tag"></div>
+</div>
+</div>
+
+### `GET` /institution/{uuid}
+<a id="op-get-institution-uuid" />
+
+> Get a specific institution by its UUID
+
+Only institutions known to authenticated users are returned
+
+
+
+
+
+
+
+
+#### Responses
+
+
+##### ▶ 200 - Ok
+
+###### Headers
+_No headers specified_
+
+###### application/json
+
+
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Description</th>
+      <th>Accepted values</th>
+    </tr>
+  </thead>
+  <tbody>
+      <tr>
+        <td>uuid <strong>(required)</strong></td>
+        <td>
+          string
+        </td>
+        <td></td>
+        <td><em>Any</em></td>
+      </tr>
+      <tr>
+        <td>name <strong>(required)</strong></td>
+        <td>
+          string
+        </td>
+        <td></td>
+        <td><em>Any</em></td>
+      </tr>
+  </tbody>
+</table>
+
+
+##### ▶ 401 - Unauthorized
+
+###### Headers
+_No headers specified_
+
+##### ▶ 404 - Resource not found
+
+###### Headers
+_No headers specified_
+
+
+#### Tags
+
+<div class="tags">
+  <div class="tags__tag"></div>
+  <div class="tags__tag"></div>
+</div>
+</div>
+
+### `PUT` /institution/{uuid}
+<a id="op-put-institution-uuid" />
+
+> Change a specific institution by its UUID
+
+
+
+
+
+
+#### Request body
+###### application/json
+
+
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Description</th>
+      <th>Accepted values</th>
+    </tr>
+  </thead>
+  <tbody>
+      <tr>
+        <td>uuid <strong>(required)</strong></td>
+        <td>
+          string
+        </td>
+        <td></td>
+        <td><em>Any</em></td>
+      </tr>
+      <tr>
+        <td>name <strong>(required)</strong></td>
+        <td>
+          string
+        </td>
+        <td></td>
+        <td><em>Any</em></td>
+      </tr>
+  </tbody>
+</table>
+
+
+##### Example _(generated)_
+
+```json
+{
+  "uuid": "string",
+  "name": "string"
+}
+```
+
+
+
+
+#### Responses
+
+
+##### ▶ 201 - Successfully updated
+
+###### Headers
+_No headers specified_
+
+##### ▶ 400 - Malformed request or parameter missing
+
+###### Headers
+_No headers specified_
+
+##### ▶ 401 - Unauthorized
+
+###### Headers
+_No headers specified_
+
+##### ▶ 404 - Resource not found
+
+###### Headers
+_No headers specified_
+
+
+#### Tags
+
+<div class="tags">
+  <div class="tags__tag"></div>
+  <div class="tags__tag"></div>
+</div>
+</div>
+
+### `DELETE` /institution/{uuid}
+<a id="op-delete-institution-uuid" />
+
+> Delete a specific institution by its UUID
+
+
+
+
+
+
+
+
+#### Responses
+
+
+##### ▶ 200 - Successfully deleted
+
+###### Headers
+_No headers specified_
+
+##### ▶ 400 - Malformed request or parameter missing
+
+###### Headers
+_No headers specified_
+
+##### ▶ 401 - Unauthorized
+
+###### Headers
+_No headers specified_
+
+##### ▶ 404 - Resource not found
+
+###### Headers
+_No headers specified_
+
+
+#### Tags
+
+<div class="tags">
+  <div class="tags__tag"></div>
   <div class="tags__tag"></div>
 </div>
 </div>
@@ -558,7 +1420,7 @@ _No headers specified_
 {
   "userUuid": "string",
   "token": "string",
-  "tokenExpiration": "2018-12-07T10:25:54Z"
+  "tokenExpiration": "2018-12-07T14:39:05Z"
 }
 ```
 <a id="" />
@@ -627,5 +1489,123 @@ _No headers specified_
   "active": true,
   "firstName": "string",
   "lastName": "string"
+}
+```
+<a id="" />
+
+#### UserCreate
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Description</th>
+      <th>Accepted values</th>
+    </tr>
+  </thead>
+  <tbody>
+      <tr>
+        <td>uuid <strong>(required)</strong></td>
+        <td>
+          string
+        </td>
+        <td></td>
+        <td><em>Any</em></td>
+      </tr>
+      <tr>
+        <td>email</td>
+        <td>
+          string
+        </td>
+        <td></td>
+        <td><em>Any</em></td>
+      </tr>
+      <tr>
+        <td>password</td>
+        <td>
+          string
+        </td>
+        <td></td>
+        <td><em>Any</em></td>
+      </tr>
+      <tr>
+        <td>active <strong>(required)</strong></td>
+        <td>
+          boolean
+        </td>
+        <td></td>
+        <td><em>Any</em></td>
+      </tr>
+      <tr>
+        <td>firstName</td>
+        <td>
+          string
+        </td>
+        <td></td>
+        <td><em>Any</em></td>
+      </tr>
+      <tr>
+        <td>lastName</td>
+        <td>
+          string
+        </td>
+        <td></td>
+        <td><em>Any</em></td>
+      </tr>
+  </tbody>
+</table>
+
+##### Example _(generated)_
+
+```json
+{
+  "uuid": "string",
+  "email": "user@example.com",
+  "password": "pa$$word",
+  "active": true,
+  "firstName": "string",
+  "lastName": "string"
+}
+```
+<a id="" />
+
+#### Institution
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Description</th>
+      <th>Accepted values</th>
+    </tr>
+  </thead>
+  <tbody>
+      <tr>
+        <td>uuid <strong>(required)</strong></td>
+        <td>
+          string
+        </td>
+        <td></td>
+        <td><em>Any</em></td>
+      </tr>
+      <tr>
+        <td>name <strong>(required)</strong></td>
+        <td>
+          string
+        </td>
+        <td></td>
+        <td><em>Any</em></td>
+      </tr>
+  </tbody>
+</table>
+
+##### Example _(generated)_
+
+```json
+{
+  "uuid": "string",
+  "name": "string"
 }
 ```
