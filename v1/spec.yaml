@@ -18,31 +18,36 @@ tags:
   - name: security
     description: Security operations like authentication / authorization
   - name: user
-    description: User operations
-
+    description: User operations (optional)
+  - name: L1
+    description: Specification level 1 (minimum implementation)
+  - name: L2
+    description: Specification level 2 (additional implementation)
+  - name: L3
+    description: Specification level 3 (optional implementation)
 paths:
 
   /:
     get:
-      description: |
-        Check endpoint to ensure the application is online and healthy.
-
+      summary: Check endpoint to ensure the application is online and healthy
+      description: >
         This is mainly used by load-balancers, but also by clients to check if the application is up and running
       tags:
         - info
+        - L3
       responses:
         '200':
           description: Ok, if everything works fine
         '500':
           description: Internal server error, if the underlying application has problems
     head:
-      description: |
-        Check endpoint to ensure the application is online and healthy.
-
+      summary: Check endpoint to ensure the application is online and healthy
+      description: >
         This is mainly used by load-balancers, but also by clients to check if the application is up and running
       operationId: headApiPing
       tags:
         - info
+        - L3
       responses:
         '200':
           description: Ok, if everything works fine
@@ -51,9 +56,7 @@ paths:
 
   /info:
     get:
-      description: |
-        Returns info about the API
-        E.g. the version
+      summary: Returns info about the API
       tags:
         - info
       responses:
@@ -66,9 +69,12 @@ paths:
 
   /security/auth/pw:
     post:
-      description: Issues a new auth token, if sucessfully authorized
+      summary: Issues a new auth token
+      description: >
+        Issues a new authentication token, if successfully authorized
       tags:
         - security
+        - L2
       requestBody:
         content:
           'application/x-www-form-urlencoded':
@@ -102,9 +108,10 @@ paths:
 
   /security/auth/renew:
     post:
-      description: Renow a soon expiring auth token
+      summary: Renow a soon expiring auth token
       tags:
         - security
+        - L2
       responses:
         '200':
           description: Successfully authenticated
@@ -122,12 +129,12 @@ paths:
 
   /user:
     get:
+      summary: Get all users
       description: |
-        Get all users
-
         Only users known to authenticated users are returned
       tags:
         - user
+        - L1
       security:
         - bearerAuth: []
       responses:
@@ -140,10 +147,10 @@ paths:
                 items:
                   $ref: '#/components/schemas/User'
     post:
-      description: |
-        Create a new user
+      summary: Create a new user
       tags:
         - user
+        - L2
       security:
         - bearerAuth: []
       requestBody:
@@ -171,12 +178,12 @@ paths:
           format: uuid
 
     get:
+      summary: Get a specific user by its UUID
       description: |
-        Get all users
-
         Only users known to authenticated users are returned
       tags:
         - user
+        - L1
       security:
         - bearerAuth: []
       responses:
@@ -191,11 +198,11 @@ paths:
         '404':
           description: Resource not found
     put:
-      description: |
-        Change existing user
+      summary: Change a specific user by its UUID
       operationId: putUser
       tags:
         - user
+        - L2
       security:
         - bearerAuth: []
       requestBody:
@@ -213,10 +220,10 @@ paths:
         '404':
           description: Resource not found
     delete:
-      description: |
-        Delete a user
+      summary: Delete a specific user by its UUID
       tags:
         - user
+        - L2
       security:
         - bearerAuth: []
       responses:
@@ -315,5 +322,3 @@ components:
         userUuid: "4dd29b64-83a3-4508-84cd-616215f4cf8d"
         token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c"
         tokenExpiration: "2019-12-07T09:47:34.274Z"
-
-
